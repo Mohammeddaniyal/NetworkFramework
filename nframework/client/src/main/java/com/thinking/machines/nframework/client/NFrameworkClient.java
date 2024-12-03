@@ -13,6 +13,15 @@ try
 Request requestObject=new Request();
 requestObject.setServicePath(servicePath);
 requestObject.setArguments(arguments);
+if(arguments!=null && arguments.length>0)
+{
+String[] argumentTypes=new String[arguments.length];
+for(int f=0;f<arguments.length;f++)
+{
+argumentTypes[f]=arguments[f].getClass().getName();
+}
+requestObject.setArgumentTypes(argumentTypes);
+}
 String requestJSONString=JSONUtil.toJSON(requestObject);
 byte objectBytes[]=requestJSONString.getBytes(StandardCharsets.UTF_8);
 int requestLength=objectBytes.length;
@@ -107,6 +116,8 @@ j=j+bytesReadCount;
 os.write(ack,0,1);
 os.flush();
 socket.close();
+
+
 
 String responseJSONString=new String(response,StandardCharsets.UTF_8);
 Response responseObject=JSONUtil.fromJSON(responseJSONString,Response.class);

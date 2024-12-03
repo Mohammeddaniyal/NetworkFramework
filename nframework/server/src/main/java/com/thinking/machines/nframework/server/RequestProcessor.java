@@ -72,8 +72,23 @@ i++;
 j=j+bytesReadCount;
 }
 String requestJSONString=new String(request,StandardCharsets.UTF_8);
+
 Request requestObject=JSONUtil.fromJSON(requestJSONString,Request.class);
 String servicePath=requestObject.getServicePath();
+Object arguments[]=requestObject.getArguments();
+if(arguments!=null && arguments.length>0)
+{
+String []argumentTypes=requestObject.getArgumentTypes();
+//Class f;
+for(int h=0;h<arguments.length;h++)
+{
+//System.out.println("Argument : "+argumentTypes[h].getClass().getName());
+if(argumentTypes[h].equals("java.lang.Integer"))
+{
+arguments[h]=((Double)arguments[h]).intValue();
+}
+}
+}
 TCPService tcpService=this.server.getTCPService(servicePath);
 Response responseObject=new Response();
 if(tcpService==null)
@@ -84,12 +99,24 @@ responseObject.setException(new RuntimeException("Invalid path : "+servicePath))
 }
 else
 {
-Class c=tcpService.c;
-Method method=tcpService.method;
 try
 {
+Class c=tcpService.c;
+Method method=tcpService.method;
+/*
+Class[] parameterTypes=method.getParameterTypes();
+for(int o=0;o<arguments.length;o++)
+{
+if(!parameterTypes[o].isAssignableFrom(arguments[o].getClass()))
+{
+throw new IllegalArgumentException("Argument type mismatch expected "+parameterTypes[o]+" but got "+arguments[o].getClass() );
+}
+}
+*/
 Object serviceObject=c.newInstance();
-Object result=method.invoke(serviceObject,requestObject.getArguments());
+//System.out.println("Class name : "+arguments.getClass().getName());
+Object result=method.invoke(serviceObject,arguments);
+
 responseObject.setSuccess(true);
 responseObject.setResult(result);
 responseObject.setException(null);

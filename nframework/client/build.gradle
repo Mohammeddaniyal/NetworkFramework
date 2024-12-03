@@ -1,0 +1,7 @@
+apply plugin : 'java'
+dependencies{
+implementation files('c:\\gson\\gson.jar','..\\common\\build\\libs\\nframework-common.jar');
+}
+jar{
+archiveBaseName= 'nframework-client'
+}
