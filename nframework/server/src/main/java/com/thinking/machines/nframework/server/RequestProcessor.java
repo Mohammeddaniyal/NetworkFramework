@@ -83,9 +83,30 @@ String []argumentTypes=requestObject.getArgumentTypes();
 for(int h=0;h<arguments.length;h++)
 {
 //System.out.println("Argument : "+argumentTypes[h].getClass().getName());
+
 if(argumentTypes[h].equals("java.lang.Integer"))
 {
 arguments[h]=((Double)arguments[h]).intValue();
+}
+else if(arguments[h].getClass().getName().equals("com.google.gson.internal.LinkedTreeMap"))
+{
+System.out.println("(before)Argument : "+arguments[h].getClass().getName());
+String js=JSONUtil.toJSON((java.io.Serializable)arguments[h]);
+System.out.println("json string : "+js);
+System.out.println(argumentTypes[h].getClass().getName());
+System.out.println(argumentTypes[h]);
+try
+{
+Class _class=Class.forName(argumentTypes[h]);
+System.out.println("name : "+_class.getName());
+arguments[h]=JSONUtil.fromJSON(js,_class);	
+}catch(ClassNotFoundException cnfe)
+{
+System.out.println(cnfe);
+}
+	
+//gson.fromJson(gson.toJson(arguments[h]),argumentTypes[h].getClass());
+System.out.println("(after)Argument : "+arguments[h].getClass().getName());
 }
 }
 }
@@ -116,7 +137,6 @@ throw new IllegalArgumentException("Argument type mismatch expected "+parameterT
 Object serviceObject=c.newInstance();
 //System.out.println("Class name : "+arguments.getClass().getName());
 Object result=method.invoke(serviceObject,arguments);
-
 responseObject.setSuccess(true);
 responseObject.setResult(result);
 responseObject.setException(null);
@@ -142,6 +162,7 @@ responseObject.setException(t);
 }
 
 String responseJSONString=JSONUtil.toJSON(responseObject);
+//System.out.println("JSON String : "+responseJSONString);
 byte objectBytes[]=responseJSONString.getBytes(StandardCharsets.UTF_8);
 int responseLength=objectBytes.length;
 header=new byte[1024];

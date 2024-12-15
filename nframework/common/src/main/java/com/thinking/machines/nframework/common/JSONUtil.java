@@ -22,6 +22,7 @@ Gson gson=new Gson();
 return gson.fromJson(jsonString,c);
 }catch(Exception exception)
 {
+System.out.println(exception);
 return null;
 }
 }
