@@ -13,6 +13,7 @@ try
 Request requestObject=new Request();
 requestObject.setServicePath(servicePath);
 requestObject.setArguments(arguments);
+/*
 if(arguments!=null && arguments.length>0)
 {
 String[] argumentTypes=new String[arguments.length];
@@ -22,6 +23,7 @@ argumentTypes[f]=arguments[f].getClass().getName();
 }
 requestObject.setArgumentTypes(argumentTypes);
 }
+*/
 String requestJSONString=JSONUtil.toJSON(requestObject);
 byte objectBytes[]=requestJSONString.getBytes(StandardCharsets.UTF_8);
 int requestLength=objectBytes.length;

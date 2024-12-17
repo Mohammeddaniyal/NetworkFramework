@@ -72,44 +72,22 @@ i++;
 j=j+bytesReadCount;
 }
 String requestJSONString=new String(request,StandardCharsets.UTF_8);
-
+//System.out.println(requestJSONString);
 Request requestObject=JSONUtil.fromJSON(requestJSONString,Request.class);
 String servicePath=requestObject.getServicePath();
 Object arguments[]=requestObject.getArguments();
-if(arguments!=null && arguments.length>0)
-{
-String []argumentTypes=requestObject.getArgumentTypes();
-//Class f;
-for(int h=0;h<arguments.length;h++)
-{
-//System.out.println("Argument : "+argumentTypes[h].getClass().getName());
+/*
+if (arguments != null && arguments.length > 0) {
+    String[] argumentTypes = requestObject.getArgumentTypes();
 
-if(argumentTypes[h].equals("java.lang.Integer"))
-{
-arguments[h]=((Double)arguments[h]).intValue();
+    for (int h = 0; h < arguments.length; h++) {
+        if (argumentTypes[h] != null) {
+            arguments[h] = ConvertArgument.convert(arguments[h], argumentTypes[h]);
+            System.out.println("(after)Argument : " + arguments[h].getClass().getName());
+        }
+    }
 }
-else if(arguments[h].getClass().getName().equals("com.google.gson.internal.LinkedTreeMap"))
-{
-System.out.println("(before)Argument : "+arguments[h].getClass().getName());
-String js=JSONUtil.toJSON((java.io.Serializable)arguments[h]);
-System.out.println("json string : "+js);
-System.out.println(argumentTypes[h].getClass().getName());
-System.out.println(argumentTypes[h]);
-try
-{
-Class _class=Class.forName(argumentTypes[h]);
-System.out.println("name : "+_class.getName());
-arguments[h]=JSONUtil.fromJSON(js,_class);	
-}catch(ClassNotFoundException cnfe)
-{
-System.out.println(cnfe);
-}
-	
-//gson.fromJson(gson.toJson(arguments[h]),argumentTypes[h].getClass());
-System.out.println("(after)Argument : "+arguments[h].getClass().getName());
-}
-}
-}
+*/
 TCPService tcpService=this.server.getTCPService(servicePath);
 Response responseObject=new Response();
 if(tcpService==null)
@@ -124,19 +102,13 @@ try
 {
 Class c=tcpService.c;
 Method method=tcpService.method;
-/*
-Class[] parameterTypes=method.getParameterTypes();
-for(int o=0;o<arguments.length;o++)
-{
-if(!parameterTypes[o].isAssignableFrom(arguments[o].getClass()))
-{
-throw new IllegalArgumentException("Argument type mismatch expected "+parameterTypes[o]+" but got "+arguments[o].getClass() );
-}
-}
-*/
 Object serviceObject=c.newInstance();
 //System.out.println("Class name : "+arguments.getClass().getName());
 Object result=method.invoke(serviceObject,arguments);
+/*if(result!=null)
+{
+responseObject.set
+}*/
 responseObject.setSuccess(true);
 responseObject.setResult(result);
 responseObject.setException(null);
