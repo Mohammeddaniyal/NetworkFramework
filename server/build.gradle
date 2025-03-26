@@ -1,0 +1,13 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+dependencies{
+implementation files('..\\common\\build\\libs\\nframework-common.jar');
+}
+
+shadowJar {
+    archiveBaseName.set("nframework-server")
+    archiveClassifier.set('')
+    mergeServiceFiles() // Ensure all service files are included
+}

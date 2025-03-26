@@ -1,0 +1,21 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+repositories {
+    mavenCentral()
+    gradlePluginPortal()
+    flatDir {
+        dirs 'libs' // This allows local JARs
+    }
+}
+dependencies {
+    implementation name: 'gson' // Use local GSON JAR
+}
+
+shadowJar {
+    archiveBaseName.set("nframework-common")
+    archiveClassifier.set('')
+    mergeServiceFiles() // Ensure all service files are included
+}
+
